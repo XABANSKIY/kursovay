@@ -6,7 +6,7 @@ from deep_translator import GoogleTranslator
 from transformers import pipeline
 import requests
 import pyttsx3
-
+import threading
 
 # Натренированная модель, которая анализирует изображение
 captioner = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base", max_new_tokens=100)
@@ -27,7 +27,7 @@ class NeuroPalApp:
 
         # Фрейм для вывода текста
         self.output_frame = tk.Frame(root, bd=2, relief=tk.GROOVE)
-        self.output_frame.place(relx=0.52, rely=0.02, relwidth=0.470, relheight=0.7)
+        self.output_frame.place(relx=0.52, rely=0.02, relwidth=0.470, relheight=0.8)
 
         self.output_text = tk.Label(self.output_frame, text="Текстовое описание", width=40, height=10, anchor='center', justify='center', wraplength=200)
         self.output_text.pack(fill="both", expand=True)
@@ -37,11 +37,11 @@ class NeuroPalApp:
 
         # Кнопка для сканирования изображения
         self.scan_button = tk.Button(root, text="Скан", command=self.analyze_image, width=20)
-        self.scan_button.place(relx=0.5, rely=0.85, anchor="s")
+        self.scan_button.place(relx=0.5, rely=0.05, anchor="s")
 
         # Кнопка для выбора изображения
         self.choose_image_button = tk.Button(root, text="Выбрать изображение", command=self.choose_image, width=20)
-        self.choose_image_button.place(relx=0.5, rely=0.95, anchor="s")
+        self.choose_image_button.place(relx=0.5, rely=1, anchor="s")
 
         # Озвучивание кнопок при наведении
         self.scan_button.bind("<Enter>", self.on_enter_scan)
@@ -54,7 +54,7 @@ class NeuroPalApp:
         self.tts_enabled.set(True)  # Изначально включено
 
         self.tts_toggle = tk.Checkbutton(root, text="выкл. озвучку", variable=self.tts_enabled, command=self.toggle_tts)
-        self.tts_toggle.place(relx=0.99, rely=0.9, anchor="ne")
+        self.tts_toggle.place(relx=0.99, rely=0.10, anchor="ne")
 
     def translate_text(self, text: str) -> str:
         translated = GoogleTranslator(source='en', target='ru').translate(text)
@@ -129,4 +129,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = NeuroPalApp(root)
     root.mainloop()
+
 
