@@ -7,6 +7,7 @@ from transformers import pipeline
 import requests
 import pyttsx3
 
+
 # Натренированная модель, которая анализирует изображение
 captioner = pipeline("image-to-text", model="Salesforce/blip-image-captioning-base", max_new_tokens=100)
 
@@ -86,6 +87,14 @@ class NeuroPalApp:
         if self.tts_enabled.get():
             threading.Thread(target=self.speak_thread, args=(text,)).start()
 
+    def speak_thread(self, text: str) -> None:
+        engine = pyttsx3.init()
+        if not engine._inLoop:  # Проверка, активен ли цикл озвучивания
+            engine.say(text)
+            engine.runAndWait()
+        else:
+            print("Цикл озвучивания уже запущен.")
+
     def toggle_tts(self):
         if self.tts_enabled.get():
             self.tts_toggle.configure(text="выкл. озвучку", fg="red")
@@ -120,5 +129,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = NeuroPalApp(root)
     root.mainloop()
-
 
